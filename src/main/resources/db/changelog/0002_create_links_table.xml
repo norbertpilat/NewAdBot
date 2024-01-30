@@ -4,7 +4,19 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <changeSet id="0" author="admin">
+    <changeSet id="0002" author="admin">
+        <createTable tableName="links">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"
+                             foreignKeyName="fk_users_links"
+                             referencedTableName="users"
+                             referencedColumnNames="id"
+                />
+            </column>
+        </createTable>
 
     </changeSet>
 </databaseChangeLog>
