@@ -4,7 +4,20 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <changeSet id="0" author="admin">
+    <changeSet id="0001" author="admin">
+        <createTable tableName="users">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="user_id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="chat_id" type="VARCHAR(100)">
+                <constraints unique="true"/>
+            </column>
+            <column name="link" type="VARCHAR(500)"/>
+            <column name="time_refresh" type="BIGINT"/>
+        </createTable>
 
     </changeSet>
 </databaseChangeLog>

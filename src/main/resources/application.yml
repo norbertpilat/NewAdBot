@@ -1,1 +1,24 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:test
+  jpa:
+    show-sql: false
+  liquibase:
+    change-log: classpath:db/changelog/master.xml
+  h2:
+    console:
+      enabled: true
+  quartz:
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: MyScheduler
+            instanceId: AUTO
+          threadPool:
+            threadCount: 5
+          jobStore:
+            class: org.quartz.simpl.RAMJobStore
+server:
+  port: 8081
 

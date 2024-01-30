@@ -1,0 +1,3 @@
+
+insert into users (CHAT_ID,LINK,TIME_REFRESH) values ('11','https://www.olx.pl/elektronika/smartwatche-i-opaski/q-apple-watch/?search%5Border%5D=created_at:desc&search%5Bfilter_enum_state%5D%5B0%5D=damaged','30');
+insert into users (CHAT_ID,LINK,TIME_REFRESH) values ('12','https://www.olx.pl/elektronika/smartwatche-i-opaski/q-apple-watch/?search%5Border%5D=created_at:desc&search%5Bfilter_enum_state%5D%5B0%5D=damaged','60');
