@@ -9,6 +9,7 @@
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
+            <column name="url" type="VARCHAR(1000)"/>
             <column name="user_id" type="BIGINT">
                 <constraints nullable="false"
                              foreignKeyName="fk_users_links"
