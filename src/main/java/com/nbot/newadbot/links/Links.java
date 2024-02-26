@@ -1,5 +1,6 @@
-package com.nbot.newadbot;
+package com.nbot.newadbot.links;
 
+import com.nbot.newadbot.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,8 +14,7 @@ public class Links {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ElementCollection
-    private Set<String> urlSet;
+    private String url;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -22,8 +22,9 @@ public class Links {
     public Links() {
     }
 
-    public Links(User user,Set<String> urlSet) {
-        this.urlSet = urlSet;
+    public Links( String url, User user )
+    {
+        this.url = url;
         this.user = user;
     }
 }

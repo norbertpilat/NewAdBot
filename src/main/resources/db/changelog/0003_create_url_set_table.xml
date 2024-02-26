@@ -10,7 +10,6 @@
                 <constraints nullable="false" />
             </column>
             <column name="url_set" type="VARCHAR(255)">
-                <constraints unique="true"/>
             </column>
         </createTable>
 

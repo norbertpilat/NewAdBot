@@ -1,16 +1,18 @@
 package com.nbot.newadbot;
 
-import org.apache.log4j.Logger;
+import com.nbot.newadbot.links.Links;
+import com.nbot.newadbot.links.LinksRepository;
+import com.nbot.newadbot.user.User;
+import com.nbot.newadbot.user.UserRepository;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -19,10 +21,12 @@ import java.util.Set;
 
 @Service
 public class NewAdBotService {
+    private final ApplicationEventPublisher eventPublisher;
     private final UserRepository userRepository;
     private final LinksRepository linksRepository;
 
-    public NewAdBotService(UserRepository userRepository, LinksRepository linksRepository) {
+    public NewAdBotService( ApplicationEventPublisher eventPublisher, UserRepository userRepository, LinksRepository linksRepository) {
+        this.eventPublisher = eventPublisher;
         this.userRepository = userRepository;
         this.linksRepository = linksRepository;
     }
@@ -43,28 +47,25 @@ public class NewAdBotService {
         return newData;
     }
     @Transactional
-    public void checkForNewData(String chatId){
-        User user = userRepository.getUserByChatId(chatId).orElseThrow();
+    public void checkForNewData(long chatId){
+        User user = userRepository.getUserByChatId( chatId).orElseThrow();
         String userUrl = user.getLink();
 
-        Links links = linksRepository.findByUser(user)
-                .orElseGet(() -> new Links(user, new HashSet<>()));
-//        LocalDateTime now = LocalDateTime.now();
-//        String format = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        Links links = linksRepository.findByUser( user)
+                .orElseGet(() -> new Links("Nowa lista",user ));
 //        log.debug(format + " Checking for new data... " + user.getId());
 
         try{
             List<String> newData = getElement(userUrl);
-            Set<String> urlSet = links.getUrlSet();
+            List<Links> allUrls = linksRepository.findAllUrlsByUserId( user.getId() );
             for (String element : newData) {
-                if (!urlSet.contains(element)) {
-//                    System.out.println(element);
-                    urlSet.add(element);
-                }
+                Links newLinks = new Links( element, user );
+                allUrls.add(newLinks);
+              eventPublisher.publishEvent( new AdEvent( links ) );
             }
-            links.setUrlSet(urlSet);
-            linksRepository.save(links);
-//            log.debug("Current links: " + links.getUrlSet().size());
+            linksRepository.save( links );
+                linksRepository.saveAll(allUrls);
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -10,8 +10,6 @@ import org.springframework.context.ConfigurableApplicationContext;
 public class NewAdBotApplication {
 
     public static void main(String[] args) {
-        ConfigurableApplicationContext run = SpringApplication.run(NewAdBotApplication.class, args);
-
+        SpringApplication.run(NewAdBotApplication.class, args);
     }
-
 }
