@@ -39,11 +39,7 @@ public class TelegramBotService extends TelegramLongPollingBot
             onSendLinks(update);
 
         }
-        catch ( TelegramApiException e )
-        {
-            throw new RuntimeException( e );
-        }
-        catch ( SchedulerException e )
+        catch (TelegramApiException | SchedulerException e )
         {
             throw new RuntimeException( e );
         }
@@ -60,7 +56,7 @@ public class TelegramBotService extends TelegramLongPollingBot
             User userByChatId = userService.getUserByChatId( chatId );
             ScheduleTaskNewData.starScheduler( newAdBotService, userByChatId );
             execute(replyToLink(chatId));
-        }else if (userService.userIsExist(chatId) && text.contains("/stop")) {
+        }else if (userService.userIsExist(chatId) && text.contains("/stop ")) {
             userService.deleteUser(chatId);
         } else if (userService.userIsExist(chatId) && !text.contains("www.olx")) {
             execute(replyToUnrecognizedMessage(chatId));
