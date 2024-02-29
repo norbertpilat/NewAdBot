@@ -2,10 +2,7 @@ package com.nbot.newadbot.quartzjob;
 
 import com.nbot.newadbot.NewAdBotService;
 import org.apache.log4j.Logger;
-import org.quartz.Job;
-import org.quartz.JobDataMap;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
+import org.quartz.*;
 
 public class CreateQuartzJob implements Job {
     private Logger log = Logger.getLogger(CreateQuartzJob.class);
@@ -15,6 +12,6 @@ public class CreateQuartzJob implements Job {
         long chatId = jobDataMap.getLong("paramKey");
         NewAdBotService newAdBotService = (NewAdBotService) jobDataMap.get( "newAdBotService");
         newAdBotService.checkForNewData(chatId);
-        log.debug("CreateQuartezJob run " + chatId);
+        log.debug("CreateQuartezJob run " + chatId );
     }
 }

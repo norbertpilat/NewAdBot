@@ -13,7 +13,6 @@ public class ScheduleTaskNewData {
          BasicConfigurator.configure();
          scheduler = new StdSchedulerFactory().getScheduler();
 
-
         int timeRefresh = user.getTimeRefresh();
         long chatId = user.getChatId();
 

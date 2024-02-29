@@ -7,6 +7,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,10 +20,6 @@ public class UserService
 
     public User getUserByChatId(long chatId){
        return userRepository.getUserByChatId( chatId ).orElseThrow();
-    }
-
-    public String findLatestUrlByUserId(Long userId){
-        return linksRepository.findLatestUrlByUserId(userId);
     }
 
     public boolean userIsExist(long chatId){
@@ -58,5 +55,14 @@ public class UserService
         userByChatId.setTimeRefresh( userByChatId.getTimeRefresh() );
         userByChatId.setChatStatus( userByChatId.getChatStatus() );
         userRepository.save( userByChatId );
+    }
+    @Transactional
+    public void deleteUser(Long chatId) {
+        User user = getUserByChatId(chatId);
+        List<Links> linksByUserId = linksRepository.findLinksByUserId(user.getId());
+        for (Links links : linksByUserId) {
+            linksRepository.delete(links);
+        }
+        userRepository.delete(user);
     }
 }

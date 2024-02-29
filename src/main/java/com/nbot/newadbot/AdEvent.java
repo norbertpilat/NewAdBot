@@ -1,7 +1,6 @@
 package com.nbot.newadbot;
 
 import com.nbot.newadbot.links.Links;
-import com.nbot.newadbot.user.User;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.context.ApplicationEvent;

@@ -5,8 +5,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Set;
-
 @Entity
 @Getter
 @Setter
@@ -22,7 +20,7 @@ public class Links {
     public Links() {
     }
 
-    public Links( String url, User user )
+    public Links(User user, String url )
     {
         this.url = url;
         this.user = user;
