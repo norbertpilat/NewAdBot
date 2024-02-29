@@ -10,11 +10,9 @@ import java.util.Optional;
 
 
 public interface LinksRepository extends CrudRepository<Links,Long> {
-    Optional<Links> findByUser( User user);
 
     List<Links> findAllUrlsByUserId(Long userId);
 
-    @Query("SELECT l.url FROM Links l WHERE l.user.id = :userId ORDER BY l.id DESC")
-    String findLatestUrlByUserId(Long userId);
-
+    List<Links> findLinksByUserId(Long userId);
+    boolean existsByUser(User user);
 }
