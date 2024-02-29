@@ -13,7 +13,8 @@ public class Links {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String url;
+    @ElementCollection
+    private Set<String> urlSet;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -21,8 +22,8 @@ public class Links {
     public Links() {
     }
 
-    public Links(User user, String url) {
-        this.url = url;
+    public Links(User user,Set<String> urlSet) {
+        this.urlSet = urlSet;
         this.user = user;
     }
 }
