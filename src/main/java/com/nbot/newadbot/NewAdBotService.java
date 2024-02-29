@@ -1,72 +1,64 @@
 package com.nbot.newadbot;
 
-import org.apache.log4j.Logger;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
+import com.nbot.newadbot.links.Links;
+import com.nbot.newadbot.links.LinksRepository;
+import com.nbot.newadbot.user.User;
+import com.nbot.newadbot.user.UserRepository;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
 
 @Service
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
 public class NewAdBotService {
     private final UserRepository userRepository;
     private final LinksRepository linksRepository;
-
-    public NewAdBotService(UserRepository userRepository, LinksRepository linksRepository) {
-        this.userRepository = userRepository;
-        this.linksRepository = linksRepository;
-    }
-    public List<String> getElement(String url){
-        List<String> newData = new ArrayList<>();
-        try {
-            Document document = Jsoup.connect(url).get();
-
-            Elements links = document.select("a.css-rc5s2u");
-
-            for (Element link : links) {
-                String href1 = "https://www.olx.pl/" + link.attr("href");
-                newData.add(href1);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return newData;
-    }
+    private final ApplicationEventPublisher eventPublisher;
     @Transactional
-    public void checkForNewData(String chatId){
+    public void checkForNewData(long chatId){
         User user = userRepository.getUserByChatId(chatId).orElseThrow();
         String userUrl = user.getLink();
 
-        Links links = linksRepository.findByUser(user)
-                .orElseGet(() -> new Links(user, new HashSet<>()));
-//        LocalDateTime now = LocalDateTime.now();
-//        String format = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-//        log.debug(format + " Checking for new data... " + user.getId());
+        boolean existingLinks = linksRepository.existsByUser(user);
 
-        try{
-            List<String> newData = getElement(userUrl);
-            Set<String> urlSet = links.getUrlSet();
-            for (String element : newData) {
-                if (!urlSet.contains(element)) {
-//                    System.out.println(element);
-                    urlSet.add(element);
+        if (existingLinks) {
+            try {
+                List<String> newData = GetNewAdFromOlx.getElement(userUrl);
+                List<Links> allUrls = linksRepository.findAllUrlsByUserId(user.getId());
+
+                if (allUrls == null) {
+                    allUrls = new ArrayList<>();
                 }
+
+                for (String element : newData) {
+                    boolean urlExists = false;
+
+                    for (Links allUrl : allUrls) {
+                        if (allUrl.getUrl() != null && allUrl.getUrl().equals(element)) {
+                            urlExists = true;
+                            break;
+                        }
+                    }
+
+                    if (!urlExists) {
+                        Links newLinks = new Links(user, element);
+                        allUrls.add(newLinks);
+                        eventPublisher.publishEvent(new AdEvent(newLinks));
+                    }
+                }
+                linksRepository.saveAll(allUrls);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
-            links.setUrlSet(urlSet);
-            linksRepository.save(links);
-//            log.debug("Current links: " + links.getUrlSet().size());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } else {
+            Links createLinks = new Links(user, "Nowa lista");
+            linksRepository.save(createLinks);
         }
     }
+
 }
