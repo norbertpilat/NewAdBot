@@ -17,6 +17,9 @@
             </column>
             <column name="link" type="VARCHAR(500)"/>
             <column name="time_refresh" type="BIGINT"/>
+            <column name="chat_status" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
         </createTable>
 
     </changeSet>

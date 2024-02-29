@@ -1,14 +1,13 @@
 package com.nbot.newadbot;
 
+import com.nbot.newadbot.user.User;
+import com.nbot.newadbot.user.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Optional;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class NewAdBotServiceTest {
