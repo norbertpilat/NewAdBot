@@ -2,7 +2,7 @@ bot:
   name:
     Olx_NewAdBot
   token:
-    6994414263:AAEOSq0BY8r45kd4-H56zfy5ZBZX990EO_A
+    XXXXXXXXXXX
 spring:
   datasource:
     url: jdbc:h2:mem:test
