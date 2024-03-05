@@ -1,4 +1,4 @@
-package com.nbot.newadbot;
+package com.nbot.newadbot.user;
 
 public enum UserStats
 {

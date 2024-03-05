@@ -1,6 +1,5 @@
 package com.nbot.newadbot.user;
 
-import com.nbot.newadbot.UserStats;
 import com.nbot.newadbot.links.Links;
 import jakarta.persistence.*;
 import lombok.Data;

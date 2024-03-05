@@ -10,8 +10,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
@@ -21,7 +20,8 @@ public class NewAdBotService {
     private final ApplicationEventPublisher eventPublisher;
     @Transactional
     public void checkForNewData(long chatId){
-        User user = userRepository.getUserByChatId(chatId).orElseThrow();
+        Optional<User> optionalUser = userRepository.getUserByChatId(chatId);
+        User user = optionalUser.orElseThrow(() -> new RuntimeException("User not found"));
         String userUrl = user.getLink();
 
         boolean existingLinks = linksRepository.existsByUser(user);
@@ -29,21 +29,11 @@ public class NewAdBotService {
         if (existingLinks) {
             try {
                 List<String> newData = GetNewAdFromOlx.getElement(userUrl);
-                List<Links> allUrls = linksRepository.findAllUrlsByUserId(user.getId());
-
-                if (allUrls == null) {
-                    allUrls = new ArrayList<>();
-                }
-
+                Set<Links> allUrls = linksRepository.findAllUrlsByUserId(user.getId())
+                        .orElseGet(HashSet::new);
                 for (String element : newData) {
-                    boolean urlExists = false;
-
-                    for (Links allUrl : allUrls) {
-                        if (allUrl.getUrl() != null && allUrl.getUrl().equals(element)) {
-                            urlExists = true;
-                            break;
-                        }
-                    }
+                    boolean urlExists = allUrls.stream()
+                            .anyMatch(allUrl -> allUrl.getUrl() != null && allUrl.getUrl().equals(element));
 
                     if (!urlExists) {
                         Links newLinks = new Links(user, element);
@@ -60,5 +50,4 @@ public class NewAdBotService {
             linksRepository.save(createLinks);
         }
     }
-
 }

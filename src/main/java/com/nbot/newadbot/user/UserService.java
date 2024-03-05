@@ -1,6 +1,5 @@
 package com.nbot.newadbot.user;
 
-import com.nbot.newadbot.UserStats;
 import com.nbot.newadbot.links.Links;
 import com.nbot.newadbot.links.LinksRepository;
 import jakarta.transaction.Transactional;
@@ -8,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
