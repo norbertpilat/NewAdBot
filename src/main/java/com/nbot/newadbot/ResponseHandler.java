@@ -1,6 +1,5 @@
 package com.nbot.newadbot;
 
-
 import com.nbot.newadbot.links.Links;
 import com.nbot.newadbot.user.User;
 import lombok.RequiredArgsConstructor;

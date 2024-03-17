@@ -14,4 +14,5 @@ public interface LinksRepository extends CrudRepository<Links,Long> {
 
     List<Links> findLinksByUserId(Long userId);
     boolean existsByUser(User user);
+    Optional<Links> findByUser(User user);
 }
